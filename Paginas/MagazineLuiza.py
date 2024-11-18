@@ -14,16 +14,32 @@ def consultar_produto():
     soup = BeautifulSoup(page, 'html.parser')
     products = soup.find_all("li", class_="nm-product-item")
 
+
+    products = soup.find_all("a", {"data-testid": "product-card-container"})
+
     product_list = []
     for product in products:
-        name_tag = product.find("h2", class_="nm-product-name")
+
+        name_tag = product.find("h2", {"data-testid": "product-title"})
         product_name = name_tag.text.strip() if name_tag else "Nome não encontrado"
 
-        link_tag = product.find("a", href=True)
-        product_link = f"https://www.magazineluiza.com.br{link_tag['href']}" if link_tag else "Link não encontrado"
+        price_tag = product.find("p", {"data-testid": "price-value"})
+        if price_tag:
+            current_price = price_tag.text.strip()
+            try:
+                current_price_value = float(
+                    current_price.replace("ou ","").replace("R$", "").replace(".", "").replace(",", ".").strip()
+                )
+            except Exception as e:
+                print(f"Erro ao processar o preço '{current_price}': {e}")
+                current_price_value = float('inf')
+        else:
+            current_price = "Preço não encontrado"
+            current_price_value = float('inf')
 
-        price_tag = product.find("span", class_="nm-price-value")
-        product_price = price_tag.text.strip() if price_tag else "Preço não encontrado"
+        link_tag = product['href'] if 'href' in product.attrs else "Link não encontrado"
+        product_link = f"https://www.magazineluiza.com.br{link_tag}" if link_tag else "Link não encontrado"
+        
 
         product_list.append({
             "name": product_name,
@@ -38,4 +54,7 @@ def consultar_produto():
         print(f"Link: {cheapest_product['link']}")
         print(f"Preço: R$ {cheapest_product['price']}")
     else:
-        print("Nenhum produto encontrado.")
+
+        print("Nenhum produto foi encontrado.")
+
+consultar_produto()

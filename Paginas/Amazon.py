@@ -13,7 +13,9 @@ def consultar_produto():
         print("Erro ao carregar a página:", e)
         return None
 
-    soup = BeautifulSoup(page, 'html.parser')
+
+    soup = BeautifulSoup(response, 'html.parser')
+
     products = soup.find_all("div", {"data-component-type": "s-search-result"})
 
     product_list = []
@@ -34,6 +36,14 @@ def consultar_produto():
             "price": product_price
         })
 
+
+            product_list.append({
+                "Nome": product_name,
+                "Preço": product_price,
+                "Link": product_link
+            })
+
+
     if product_list:
         cheapest_product = min(product_list, key=lambda x: float(x["price"].replace(".", "").replace(",", ".")))
         print("Produto mais barato encontrado:")
@@ -41,4 +51,8 @@ def consultar_produto():
         print(f"Link: {cheapest_product['link']}")
         print(f"Preço: R$ {cheapest_product['price']}")
     else:
-        print("Nenhum produto encontrado.")
+
+        print("Nenhum produto encontrado ou estrutura da página alterada.")
+
+consultar_produto()
+

@@ -39,3 +39,6 @@ def consultar_produto():
         print(f"Preço: R$ {cheapest_product['price']}")
     else:
         print("Nenhum produto encontrado.")
+
+consultar_produto()
+
