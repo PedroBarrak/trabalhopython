@@ -13,10 +13,8 @@ def consultar_produto():
         print("Erro ao carregar a página:", e)
         return
 
-    # Parsear o HTML com BeautifulSoup
     soup = BeautifulSoup(response, 'html.parser')
 
-    # Encontrar todos os produtos listados
     products = soup.find_all("div", {"data-component-type": "s-search-result"})
     product_list = []
 
@@ -36,7 +34,6 @@ def consultar_produto():
                 "Link": product_link
             })
 
-    # Exibir os produtos encontrados
     if product_list:
         for idx, prod in enumerate(product_list, 1):
             print(f"Produto {idx}:")
@@ -46,5 +43,4 @@ def consultar_produto():
     else:
         print("Nenhum produto encontrado ou estrutura da página alterada.")
 
-# Chamar a função para testar
 consultar_produto()

@@ -1,10 +1,9 @@
 import urllib.request
 from bs4 import BeautifulSoup
 
-def consultar_produto_casas_bahia():
+def consultar_produto():
     url = "https://www.casasbahia.com.br/teclado-yamaha-psr-e473/b"
 
-    # Adicionar cabeçalho para simular um navegador real
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
     }
@@ -17,18 +16,14 @@ def consultar_produto_casas_bahia():
         print("Erro ao carregar a página:", e)
         return
 
-    # Parsear o HTML com BeautifulSoup
     soup = BeautifulSoup(response, 'html.parser')
 
-    # Encontrar todos os produtos listados
-    products = soup.find_all("a", {"title": True})  # Filtra links com o atributo 'title'
+    products = soup.find_all("a", {"title": True}) 
     product_list = []
 
     for product in products:
-        # Nome do produto
         product_name_tag = product.find("span", {"aria-hidden": "true"})
-        # Preço do produto
-        product_price_tag = product.find_next("span", class_="css-1vmkvrm")  # Localiza o próximo preço no HTML
+        product_price_tag = product.find_next("span", class_="css-1vmkvrm")  
 
         if product_name_tag and product_price_tag:
             product_name = product_name_tag.text.strip()
@@ -41,7 +36,6 @@ def consultar_produto_casas_bahia():
                 "Link": product_link
             })
 
-    # Exibir os produtos encontrados
     if product_list:
         for idx, prod in enumerate(product_list, 1):
             print(f"Produto {idx}:")
@@ -51,5 +45,4 @@ def consultar_produto_casas_bahia():
     else:
         print("Nenhum produto encontrado ou estrutura da página alterada.")
 
-# Chamar a função para testar
-consultar_produto_casas_bahia()
+consultar_produto()

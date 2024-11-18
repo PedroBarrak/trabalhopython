@@ -12,16 +12,13 @@ def consultar_produto():
 
     soup = BeautifulSoup(page, 'html.parser')
 
-    # Encontrar todos os produtos listados
     products = soup.find_all("a", {"data-testid": "product-card-container"})
     product_list = []
 
     for product in products:
-        # Nome do produto
         name_tag = product.find("h2", {"data-testid": "product-title"})
         product_name = name_tag.text.strip() if name_tag else "Nome não encontrado"
 
-        # Preço do produto
         price_tag = product.find("p", {"data-testid": "price-value"})
         if price_tag:
             current_price = price_tag.text.strip()
@@ -36,7 +33,6 @@ def consultar_produto():
             current_price = "Preço não encontrado"
             current_price_value = float('inf')
 
-        # Link do produto
         link_tag = product['href'] if 'href' in product.attrs else "Link não encontrado"
         product_link = f"https://www.magazineluiza.com.br{link_tag}" if link_tag else "Link não encontrado"
         
@@ -46,7 +42,6 @@ def consultar_produto():
             "price": current_price_value
         })
 
-    # Verificar e imprimir o produto mais barato
     if product_list:
         valid_products = [p for p in product_list if p["price"] != float('inf')]
         if valid_products:
@@ -60,5 +55,4 @@ def consultar_produto():
     else:
         print("Nenhum produto foi encontrado.")
 
-# Chamar a função para testar
 consultar_produto()

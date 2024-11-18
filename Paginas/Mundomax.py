@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 def consultar_produto():
     url = "https://www.mundomax.com.br/busca/?q=teclado%20yamaha%20psr%20e473"
 
-    # Cabeçalho para simular um navegador
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
     }
@@ -16,31 +15,24 @@ def consultar_produto():
         print("Erro ao carregar a página:", e)
         return
 
-    # Parsear o HTML com BeautifulSoup
     soup = BeautifulSoup(response, 'html.parser')
 
-    # Encontrar todos os produtos listados
     products = soup.find_all("div", class_="col-xs-6 col-sm-6 col-md-4 product-box")
     product_list = []
 
     for product in products:
-        # Nome do produto
         product_name_tag = product.find("span", class_="hidden-xs")
-        # Preço do produto
         product_price_tag = product.find("div", class_="product-priceBlue")
-        # Link para o produto
         product_link_tag = product.find("a", class_="product-link")
 
         if product_name_tag and product_price_tag and product_link_tag:
             product_name = product_name_tag.text.strip()
-            # Verifica se o nome do produto contém o termo "PSR-E473"
         
       
             product_price = product_price_tag.text.strip().replace("R$", "").replace(".", "").replace(",", ".")
             product_link = "https://www.mundomax.com.br" + product_link_tag['href']
 
             try:
-                # Convertendo o preço para float
                 product_price = float(product_price)
                 product_list.append({
                     "Nome": product_name,
@@ -48,10 +40,8 @@ def consultar_produto():
                     "Link": product_link
                 })
             except ValueError:
-                # Ignorar preços que não puderam ser convertidos
                 continue
 
-    # Encontrar o menor preço
     if product_list:
         min_price_product = min(product_list, key=lambda x: x['Preço'])
         if "PSR-E473" not in min_price_product['Nome']:
@@ -62,5 +52,5 @@ def consultar_produto():
     else:
         print("Nenhum produto encontrado ou estrutura da página alterada.")
 
-# Chamar a função para testar
 consultar_produto()
+

@@ -1,94 +1,62 @@
 from validate_docbr import CPF
 import re
 
-
-nome = input("Digite seu nome: ")
-cpf = input("Digite seu cpf: ")
-
-#VALIDAÇÃO DE CPF
-cpf_validacao = CPF ()
-
-print("CPF VALIDADO!", cpf_validacao.validate(cpf) )
-
-
-#VALIDAÇÃO DE EMAIL
+cpf = input("Digite seu CPF: ")
+cpf_validacao = CPF()
+print("CPF VALIDADO:", cpf_validacao.validate(cpf))
 
 def email_validacao(email):
-    validado = re.fullmatch(r'^[a-zA-Z0-9._-]+@([a-z0-9]+)(\.[a-z]{2,3})+$', email)
-    if validado:
-        return True
-    return False
+    return bool(re.fullmatch(r'^[a-zA-Z0-9._-]+@([a-z0-9]+)(\.[a-z]{2,3})+$', email))
 
 email = input("Digite seu e-mail: ")
-
-if email_validacao(email):
-    print("O e-mail é válido: VALIDO")
-else:
-    print("O e-mail é inválido: INVALIDO")
-
-#VALIDAÇÃO TELEFONE
+print("E-MAIL:", "VÁLIDO" if email_validacao(email) else "INVÁLIDO")
 
 def telefone_validacao(telefone):
-    validado = re.fullmatch(r"\(\d{2}\) \d{5}-\d{4}", telefone)
-    if validado:
-        return True
-    return False
+    return bool(re.fullmatch(r"\(\d{2}\) \d{5}-\d{4}", telefone))
 
-telefone = input("Digite seu Telefone: ")
-
-print("TELEFONE: ", telefone_validacao(telefone))
-
+telefone = input("Digite seu telefone: ")
+print("TELEFONE:", "VÁLIDO" if telefone_validacao(telefone) else "INVÁLIDO")
 
 def site_por_matricula(matricula):
-    
     lista = [
-        "Music Center",    # 0
-        "Amazon",          # 1
-        "Mercado Livre",   # 2
-        "Magazine Luiza",  # 3
-        "Casas Bahia",     # 4
-        "Mundomax",        # 5
-        "Carrefour",       # 6
-        "Americanas",      # 7
-        "Ponto Frio",      # 8
-        "Extra"            # 9
+        "Music Center", "Amazon", "Mercado Livre", "Magazine Luiza",
+        "Casas Bahia", "Mundomax", "Carrefour", "Americanas", 
+        "Ponto Frio", "Extra"
     ]
-    
-    
     ultimo_digito = int(str(matricula)[-1])
     site = lista[ultimo_digito]
-    print("O site correspondente ao último dígito da matrícula é: ", site)
-
+    print("O site correspondente ao último dígito da matrícula é:", site)
     if ultimo_digito == 0:
         import Paginas.MusicCenter as music
         resultado = music.consultar_produto()
-    if ultimo_digito ==1:
-        # Não feito
-        return
-    if ultimo_digito==2:
-        import Paginas.MercadoLivre as Mec
-        resultado = music.consultar_produto()
-    if ultimo_digito ==3:
-        import Paginas.MagazineLuiza as Ml
-        resultado = Ml.consultar_produto()
-    if ultimo_digito == 4:
-        # Não Feito
-        return
-    if ultimo_digito == 5:
-        import Paginas.Mundomax as Mx
-        resultado = Mx.consultar_produto()
-    if ultimo_digito == 6:
-        # Não feito
-        return
-    if ultimo_digito==7:
-           # Não feito
-        return
-    
-
-    print("Resultado da consulta em ",site,":", resultado)
-    return site
+    elif ultimo_digito == 1:
+        import Paginas.Amazon as amz
+        resultado = amz.consultar_produto()
+    elif ultimo_digito == 2:
+        import Paginas.MercadoLivre as mec
+        resultado = mec.consultar_produto()
+    elif ultimo_digito == 3:
+        import Paginas.MagazineLuiza as ml
+        resultado = ml.consultar_produto()
+    elif ultimo_digito == 4:
+        import Paginas.CasasBahia as cb
+        resultado = cb.consultar_produto()
+    elif ultimo_digito == 5:
+        import Paginas.Mundomax as mx
+        resultado = mx.consultar_produto()
+    elif ultimo_digito == 6:
+        import Paginas.Carrefour as cf
+        resultado = cf.consultar_produto()
+    elif ultimo_digito == 7:
+        import Paginas.Americanas as am
+        resultado = am.consultar_produto()
+    elif ultimo_digito == 8:
+        import Paginas.PontoFrio as pf
+        resultado = pf.consultar_produto()
+    elif ultimo_digito == 9:
+        import Paginas.Extra as ex
+        resultado = ex.consultar_produto()
+    print("Resultado da consulta em", site, ":", resultado)
 
 matricula = input("Digite o número da matrícula: ")
 site_por_matricula(matricula)
-
-

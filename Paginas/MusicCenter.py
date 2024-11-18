@@ -52,3 +52,5 @@ def consultar_produto():
             print("Nenhum produto com preço válido foi encontrado.")
     else:
         print("Nenhum produto foi encontrado.")
+
+consultar_produto()
