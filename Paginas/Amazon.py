@@ -37,13 +37,6 @@ def consultar_produto():
         })
 
 
-            product_list.append({
-                "Nome": product_name,
-                "Preço": product_price,
-                "Link": product_link
-            })
-
-
     if product_list:
         cheapest_product = min(product_list, key=lambda x: float(x["price"].replace(".", "").replace(",", ".")))
         print("Produto mais barato encontrado:")
