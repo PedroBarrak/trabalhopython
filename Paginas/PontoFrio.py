@@ -1,6 +1,7 @@
 import urllib.request
 from bs4 import BeautifulSoup
 
+
 def consultar_produto():
     url = "https://www.pontofrio.com.br/Teclado-musical-Yamaha-PSR-E360/b"
     headers = {'User-Agent': 'Mozilla/5.0'}

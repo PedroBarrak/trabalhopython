@@ -1,6 +1,7 @@
 import urllib.request
 from bs4 import BeautifulSoup
 
+
 def consultar_produto():
     wiki = "https://lista.mercadolivre.com.br/teclado-yamaha-psr-e473#D[A:teclado%20yamaha%20psr%20e473]"
     try:
@@ -22,11 +23,42 @@ def consultar_produto():
         current_price = current_price_tag.text.strip() if current_price_tag else "Preço não encontrado"
         if decimal_tag:
             current_price += f",{decimal_tag.text.strip()}"
-        product_list.append({
-            "name": product_name,
-            "link": product_link,
-            "price": current_price
-        })
+=======
+def consultar_produto():
+    # URL da página a ser raspada
+    url = "https://lista.mercadolivre.com.br/teclado-yamaha-psr-473#D[A:teclado%20yamaha%20psr-473]"
+
+    try:
+        # Faz a requisição para a página
+        page = urllib.request.urlopen(url)
+    except Exception as e:
+        print("Erro ao carregar a página:", e)
+        exit()
+
+    # Faz o parsing do HTML
+    soup = BeautifulSoup(page, 'html5lib')
+
+    # Encontra todos os produtos na página
+    products = soup.find_all("li", class_="ui-search-layout__item")
+
+    product_list = []
+
+    # Loop para extrair informações de cada produto
+    for product in products:
+        # Nome do produto
+        name_tag = product.find("h2", class_="poly-component__title")
+        product_name = name_tag.text.strip() if name_tag else "Nome não encontrado"
+
+        # Link do produto
+        link_tag = product.find("a", href=True)
+        product_link = link_tag['href'] if link_tag else "Link não encontrado"
+
+        # Preço atual
+        current_price_tag = product.find("span", class_="andes-money-amount")
+        current_price = current_price_tag.text.strip() if current_price_tag else "Preço atual não encontrado"
+
+        # Adiciona os dados do produto à lista
+
 
     if product_list:
         for product in product_list:
@@ -34,7 +66,9 @@ def consultar_produto():
                 product["price_value"] = float(product["price"].replace(".", "").replace(",", "."))
             except ValueError:
                 product["price_value"] = float('inf')
+
         cheapest_product = min(product_list, key=lambda x: x["price_value"])
+
         print("Produto mais barato encontrado:")
         print(f"Nome: {cheapest_product['name']}")
         print(f"Link: {cheapest_product['link']}")

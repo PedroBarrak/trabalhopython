@@ -1,6 +1,7 @@
 import urllib.request
 from bs4 import BeautifulSoup
 
+
 def consultar_produto():
     url = "https://www.carrefour.com.br/busca/Teclado%20musical%20Yamaha%20PSR-E360"
     headers = {'User-Agent': 'Mozilla/5.0'}

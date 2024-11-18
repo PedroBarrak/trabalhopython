@@ -1,6 +1,7 @@
 import urllib.request
 from bs4 import BeautifulSoup
 
+
 def consultar_produto():
     url = "https://www.casasbahia.com.br/teclado-yamaha-psr-e473/b"
     headers = {'User-Agent': 'Mozilla/5.0'}
@@ -39,3 +40,4 @@ def consultar_produto():
         print(f"Preço: R$ {cheapest_product['price']}")
     else:
         print("Nenhum produto encontrado.")
+

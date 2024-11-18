@@ -62,6 +62,7 @@ def site_por_matricula(matricula):
     if ultimo_digito == 0:
         import Paginas.MusicCenter as music
         resultado = music.consultar_produto()
+
         print("Resultado da consulta em MusicCenter:", resultado)
     elif ultimo_digito == 1:
         import Paginas.Amazon as amazon
@@ -99,7 +100,6 @@ def site_por_matricula(matricula):
         import Paginas.Extra as extra
         resultado = extra.consultar_produto()
         print("Resultado da consulta em Extra:", resultado)
-
     return site
 
 matricula = input("Digite o número da matrícula: ")
