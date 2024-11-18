@@ -62,30 +62,44 @@ def site_por_matricula(matricula):
     if ultimo_digito == 0:
         import Paginas.MusicCenter as music
         resultado = music.consultar_produto()
-    if ultimo_digito ==1:
-        # Não feito
-        return
-    if ultimo_digito==2:
-        import Paginas.MercadoLivre as Mec
-        resultado = music.consultar_produto()
-    if ultimo_digito ==3:
-        import Paginas.MagazineLuiza as Ml
-        resultado = Ml.consultar_produto()
-    if ultimo_digito == 4:
-        # Não Feito
-        return
-    if ultimo_digito == 5:
-        import Paginas.Mundomax as Mx
-        resultado = Mx.consultar_produto()
-    if ultimo_digito == 6:
-        # Não feito
-        return
-    if ultimo_digito==7:
-           # Não feito
-        return
-    
 
-    print("Resultado da consulta em ",site,":", resultado)
+        print("Resultado da consulta em MusicCenter:", resultado)
+    elif ultimo_digito == 1:
+        import Paginas.Amazon as amazon
+        resultado = amazon.consultar_produto()
+        print("Resultado da consulta em Amazon:", resultado)
+    elif ultimo_digito == 2:
+        import Paginas.MercadoLivre as mercadolivre
+        resultado = mercadolivre.consultar_produto()
+        print("Resultado da consulta em Mercado Livre:", resultado)
+    elif ultimo_digito == 3:
+        import Paginas.MagazineLuiza as magazineluiza
+        resultado = magazineluiza.consultar_produto()
+        print("Resultado da consulta em Magazine Luiza:", resultado)
+    elif ultimo_digito == 4:
+        import Paginas.CasasBahia as casasbahia
+        resultado = casasbahia.consultar_produto()
+        print("Resultado da consulta em Casas Bahia:", resultado)
+    elif ultimo_digito == 5:
+        import Paginas.Mundomax as mundomax
+        resultado = mundomax.consultar_produto()
+        print("Resultado da consulta em Mundomax:", resultado)
+    elif ultimo_digito == 6:
+        import Paginas.Carrefour as carrefour
+        resultado = carrefour.consultar_produto()
+        print("Resultado da consulta em Carrefour:", resultado)
+    elif ultimo_digito == 7:
+        import Paginas.Americanas as americanas
+        resultado = americanas.consultar_produto()
+        print("Resultado da consulta em Americanas:", resultado)
+    elif ultimo_digito == 8:
+        import Paginas.PontoFrio as pontofrio
+        resultado = pontofrio.consultar_produto()
+        print("Resultado da consulta em Ponto Frio:", resultado)
+    elif ultimo_digito == 9:
+        import Paginas.Extra as extra
+        resultado = extra.consultar_produto()
+        print("Resultado da consulta em Extra:", resultado)
     return site
 
 matricula = input("Digite o número da matrícula: ")

@@ -1,55 +1,43 @@
 import urllib.request
 from bs4 import BeautifulSoup
 
-def consultar_produto_casas_bahia():
+
+def consultar_produto():
     url = "https://www.casasbahia.com.br/teclado-yamaha-psr-e473/b"
-
-    # Adicionar cabeçalho para simular um navegador real
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-    }
-
+    headers = {'User-Agent': 'Mozilla/5.0'}
     req = urllib.request.Request(url, headers=headers)
-
     try:
-        response = urllib.request.urlopen(req)
+        page = urllib.request.urlopen(req)
     except Exception as e:
         print("Erro ao carregar a página:", e)
-        return
+        return None
 
-    # Parsear o HTML com BeautifulSoup
-    soup = BeautifulSoup(response, 'html.parser')
+    soup = BeautifulSoup(page, 'html.parser')
+    products = soup.find_all("div", class_="product-card")
 
-    # Encontrar todos os produtos listados
-    products = soup.find_all("a", {"title": True})  # Filtra links com o atributo 'title'
     product_list = []
-
     for product in products:
-        # Nome do produto
-        product_name_tag = product.find("span", {"aria-hidden": "true"})
-        # Preço do produto
-        product_price_tag = product.find_next("span", class_="css-1vmkvrm")  # Localiza o próximo preço no HTML
+        name_tag = product.find("h2", class_="product-card-name")
+        product_name = name_tag.text.strip() if name_tag else "Nome não encontrado"
 
-        if product_name_tag and product_price_tag:
-            product_name = product_name_tag.text.strip()
-            product_price = product_price_tag.text.strip()
-            product_link = product['href']
+        link_tag = product.find("a", href=True)
+        product_link = f"https://www.casasbahia.com.br{link_tag['href']}" if link_tag else "Link não encontrado"
 
-            product_list.append({
-                "Nome": product_name,
-                "Preço": product_price,
-                "Link": product_link
-            })
+        price_tag = product.find("span", class_="price__sale")
+        product_price = price_tag.text.strip() if price_tag else "Preço não encontrado"
 
-    # Exibir os produtos encontrados
+        product_list.append({
+            "name": product_name,
+            "link": product_link,
+            "price": product_price
+        })
+
     if product_list:
-        for idx, prod in enumerate(product_list, 1):
-            print(f"Produto {idx}:")
-            print(f"  Nome: {prod['Nome']}")
-            print(f"  Preço: {prod['Preço']}")
-            print(f"  Link: {prod['Link']}\n")
+        cheapest_product = min(product_list, key=lambda x: float(x["price"].replace(".", "").replace(",", ".")))
+        print("Produto mais barato encontrado:")
+        print(f"Nome: {cheapest_product['name']}")
+        print(f"Link: {cheapest_product['link']}")
+        print(f"Preço: R$ {cheapest_product['price']}")
     else:
-        print("Nenhum produto encontrado ou estrutura da página alterada.")
+        print("Nenhum produto encontrado.")
 
-# Chamar a função para testar
-consultar_produto_casas_bahia()

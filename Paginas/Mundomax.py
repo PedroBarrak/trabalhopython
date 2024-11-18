@@ -2,65 +2,40 @@ import urllib.request
 from bs4 import BeautifulSoup
 
 def consultar_produto():
-    url = "https://www.mundomax.com.br/busca/?q=teclado%20yamaha%20psr%20e473"
-
-    # Cabeçalho para simular um navegador
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-    }
+    url = "https://www.mundomax.com.br/busca/?q=musical%20yamaha%20psr%20e360"
+    headers = {'User-Agent': 'Mozilla/5.0'}
     req = urllib.request.Request(url, headers=headers)
-
     try:
-        response = urllib.request.urlopen(req)
+        page = urllib.request.urlopen(req)
     except Exception as e:
         print("Erro ao carregar a página:", e)
-        return
+        return None
 
-    # Parsear o HTML com BeautifulSoup
-    soup = BeautifulSoup(response, 'html.parser')
+    soup = BeautifulSoup(page, 'html.parser')
+    products = soup.find_all("div", class_="product-card")
 
-    # Encontrar todos os produtos listados
-    products = soup.find_all("div", class_="col-xs-6 col-sm-6 col-md-4 product-box")
     product_list = []
-
     for product in products:
-        # Nome do produto
-        product_name_tag = product.find("span", class_="hidden-xs")
-        # Preço do produto
-        product_price_tag = product.find("div", class_="product-priceBlue")
-        # Link para o produto
-        product_link_tag = product.find("a", class_="product-link")
+        name_tag = product.find("h2", class_="product-card-name")
+        product_name = name_tag.text.strip() if name_tag else "Nome não encontrado"
 
-        if product_name_tag and product_price_tag and product_link_tag:
-            product_name = product_name_tag.text.strip()
-            # Verifica se o nome do produto contém o termo "PSR-E473"
-        
-      
-            product_price = product_price_tag.text.strip().replace("R$", "").replace(".", "").replace(",", ".")
-            product_link = "https://www.mundomax.com.br" + product_link_tag['href']
+        link_tag = product.find("a", href=True)
+        product_link = f"https://www.mundomax.com.br{link_tag['href']}" if link_tag else "Link não encontrado"
 
-            try:
-                # Convertendo o preço para float
-                product_price = float(product_price)
-                product_list.append({
-                    "Nome": product_name,
-                    "Preço": product_price,
-                    "Link": product_link
-                })
-            except ValueError:
-                # Ignorar preços que não puderam ser convertidos
-                continue
+        price_tag = product.find("span", class_="price-value")
+        product_price = price_tag.text.strip() if price_tag else "Preço não encontrado"
 
-    # Encontrar o menor preço
+        product_list.append({
+            "name": product_name,
+            "link": product_link,
+            "price": product_price
+        })
+
     if product_list:
-        min_price_product = min(product_list, key=lambda x: x['Preço'])
-        if "PSR-E473" not in min_price_product['Nome']:
-            print("Produto Pesquisado Não encontrado. Produto Mais Barato da Busca")
-        print(f"  Nome: {min_price_product['Nome']}")
-        print(f"  Preço: R$ {min_price_product['Preço']:.2f}")
-        print(f"  Link: {min_price_product['Link']}\n")
+        cheapest_product = min(product_list, key=lambda x: float(x["price"].replace(".", "").replace(",", ".")))
+        print("Produto mais barato encontrado:")
+        print(f"Nome: {cheapest_product['name']}")
+        print(f"Link: {cheapest_product['link']}")
+        print(f"Preço: R$ {cheapest_product['price']}")
     else:
-        print("Nenhum produto encontrado ou estrutura da página alterada.")
-
-# Chamar a função para testar
-consultar_produto()
+        print("Nenhum produto encontrado.")
