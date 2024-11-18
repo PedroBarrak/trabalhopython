@@ -1,7 +1,6 @@
 from validate_docbr import CPF
 import re
 
-#O programa coleta os dados (nome, CPF, email, etc.).
 
 nome = input("Digite seu nome: ")
 cpf = input("Digite seu cpf: ")
@@ -58,8 +57,15 @@ def site_por_matricula(matricula):
     
     ultimo_digito = int(str(matricula)[-1])
     site = lista[ultimo_digito]
+    print("O site correspondente ao último dígito da matrícula é: ", site)
+
+    if ultimo_digito == 0:
+        import Paginas.MusicCenter as music
+        resultado = music.consultar_produto()
+        print("Resultado da consulta em MusicCenter:", resultado)
     return site
 
 matricula = input("Digite o número da matrícula: ")
-site = site_por_matricula(matricula)
-print("O site correspondente ao último dígito da matrícula é: ", site) 
+site_por_matricula(matricula)
+
+
