@@ -2,20 +2,24 @@ import urllib.request
 from bs4 import BeautifulSoup
 
 def consultar_produto():
-    url = "https://www.magazineluiza.com.br/busca/teclado+yamaha+psr+e473/?from=submit"
-
+    url = "https://www.magazinevoce.com.br/magazinebusca360/busca/teclado+yamaha+psr+e473/?from=submit"
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    req = urllib.request.Request(url, headers=headers)
     try:
-        page = urllib.request.urlopen(url)
+        page = urllib.request.urlopen(req)
     except Exception as e:
         print("Erro ao carregar a página:", e)
-        return
+        return None
 
     soup = BeautifulSoup(page, 'html.parser')
+    products = soup.find_all("li", class_="nm-product-item")
+
 
     products = soup.find_all("a", {"data-testid": "product-card-container"})
-    product_list = []
 
+    product_list = []
     for product in products:
+
         name_tag = product.find("h2", {"data-testid": "product-title"})
         product_name = name_tag.text.strip() if name_tag else "Nome não encontrado"
 
@@ -36,23 +40,21 @@ def consultar_produto():
         link_tag = product['href'] if 'href' in product.attrs else "Link não encontrado"
         product_link = f"https://www.magazineluiza.com.br{link_tag}" if link_tag else "Link não encontrado"
         
+
         product_list.append({
             "name": product_name,
             "link": product_link,
-            "price": current_price_value
+            "price": product_price
         })
 
     if product_list:
-        valid_products = [p for p in product_list if p["price"] != float('inf')]
-        if valid_products:
-            cheapest_product = min(valid_products, key=lambda x: x["price"])
-            print("Produto mais barato encontrado:")
-            print(f"Nome: {cheapest_product['name']}")
-            print(f"Link: {cheapest_product['link']}")
-            print(f"Preço: R$ {cheapest_product['price']:.2f}")
-        else:
-            print("Nenhum produto com preço válido foi encontrado.")
+        cheapest_product = min(product_list, key=lambda x: float(x["price"].replace(".", "").replace(",", ".")))
+        print("Produto mais barato encontrado:")
+        print(f"Nome: {cheapest_product['name']}")
+        print(f"Link: {cheapest_product['link']}")
+        print(f"Preço: R$ {cheapest_product['price']}")
     else:
+
         print("Nenhum produto foi encontrado.")
 
 consultar_produto()

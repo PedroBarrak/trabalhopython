@@ -9,19 +9,20 @@ def consultar_produto():
     }
 
     req = urllib.request.Request(url, headers=headers)
-
     try:
-        response = urllib.request.urlopen(req)
+        page = urllib.request.urlopen(req)
     except Exception as e:
         print("Erro ao carregar a página:", e)
-        return
+        return None
+
 
     soup = BeautifulSoup(response, 'html.parser')
 
     products = soup.find_all("a", {"title": True}) 
-    product_list = []
 
+    product_list = []
     for product in products:
+
         product_name_tag = product.find("span", {"aria-hidden": "true"})
         product_price_tag = product.find_next("span", class_="css-1vmkvrm")  
 
@@ -37,12 +38,14 @@ def consultar_produto():
             })
 
     if product_list:
-        for idx, prod in enumerate(product_list, 1):
-            print(f"Produto {idx}:")
-            print(f"  Nome: {prod['Nome']}")
-            print(f"  Preço: {prod['Preço']}")
-            print(f"  Link: {prod['Link']}\n")
+        cheapest_product = min(product_list, key=lambda x: float(x["price"].replace(".", "").replace(",", ".")))
+        print("Produto mais barato encontrado:")
+        print(f"Nome: {cheapest_product['name']}")
+        print(f"Link: {cheapest_product['link']}")
+        print(f"Preço: R$ {cheapest_product['price']}")
     else:
-        print("Nenhum produto encontrado ou estrutura da página alterada.")
+        print("Nenhum produto encontrado.")
+
 
 consultar_produto()
+

@@ -41,3 +41,4 @@ def consultar_produto():
         print("Nenhum produto encontrado.")
 
 consultar_produto()
+

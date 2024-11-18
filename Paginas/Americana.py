@@ -38,6 +38,8 @@ def consultar_produto():
         print(f"Link: {cheapest_product['link']}")
         print(f"Preço: R$ {cheapest_product['price']}")
     else:
+
         print("Nenhum produto encontrado.")
 
 consultar_produto()
+
